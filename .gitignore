@@ -1,0 +1,5 @@
+**/__pycache__
+error_log/
+htmlcov/
+.coverage
+
