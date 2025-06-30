@@ -1,13 +1,33 @@
+"""
+結構如下：
+env_config
+└── 環境
+    └── 頁面
+        ├── url
+        └── test_data
+"""
+
+
 env_config = {
     "prod": {
         "register": {
             "url": "http://www.acy.com/en/open-live-account",
             "test_data": {
+                "valid_data":{
+                    "country_of_residence": "Taiwan",
+                    "country_code": "+886",
+                    "first_name": "test",
+                    "last_name": "testme",
+                    "mobile_number": "+886 911222333",
+                    "email_address": "test1234@gmail.com",
+                    "create_password": "Lucky1234@"
+                },
                 "invalid_first_name": {
                     "country_of_residence": "Taiwan",
                     "first_name": "1234",  # 無效：姓名不能為數字
                     "last_name": "testme",
-                    "mobile_number": "+886 911222333",
+                    "country_code": "+886",
+                    "mobile_number": "911222333",
                     "email_address": "test1234@gmail.com",
                     "create_password": "Lucky1234@"
                 },

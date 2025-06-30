@@ -8,12 +8,11 @@ import datetime
 import re
 import os
 import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import stat
 
 # 自動加執行權限
-
-
-
 def pytest_addoption(parser):
     """添加 pytest 命令列選項"""
     parser.addoption(
@@ -72,7 +71,7 @@ def chrome_browser(device):
 
     # 建立 ChromeDriver 服務 (自動下載相容版本)
     # chrome_service = Service(executable_path=ChromeDriverManager().install())
-      # 自動下載chromedriver
+    # 自動下載chromedriver
     driver_path = ChromeDriverManager().install()
 
     # 強制修正路徑
@@ -103,24 +102,33 @@ def page_config(env, request):
     return env_config[env][page]
 
 @pytest.fixture(scope="session")
-def test_data(page_config):
-    return page_config["test_data"]
-
-
+def register_page(env):
+    """
+    專門取得 register 頁面的 URL 或其他資訊
+    """
+    return env_config[env]["register"]
+@pytest.fixture(scope="session")
+def register_data(register_page):
+    """
+    專門取得 register頁面的測試資料
+    """
+    return register_page["test_data"]
 
 # tryfirst=True = 多個hook時，先跑這個 hook
 # hookwrapper=True = 可以在執行前後插入代碼，攔截結果、修改結果，收集測試資訊
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    本功能是利用pytest報告的hook function取出pytest.fail.Exception錯誤的log，
+    本功能是利用pytest報告的hook function取出pytest報錯的log，
     並在error_log目錄下，建立.log檔。
     """
     # 暫停函數並返回一個結果容器，包含測試報告
     outcome = yield
     # 取得報告測試物件
     report = outcome.get_result()
-    if report.when == 'call' and call.excinfo and isinstance(call.excinfo.value, pytest.fail.Exception):
+
+    # 改為捕捉所有失敗（assert、Exception等）
+    if report.when == 'call' and report.failed:
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         os.makedirs('error_log', exist_ok=True)
         log_file = os.path.join('error_log', f"error_{now}.log")
@@ -133,7 +141,7 @@ def pytest_runtest_makereport(item, call):
         """
         path_sep = re.escape(os.sep) #設定 Windows(\) & Ubuntu(/) 的斜線通用辨識符號
         match = re.search(rf'Failed:(.*?)tests{path_sep}(\S+): Failed', failed_txt, re.DOTALL)
-  
+
         if match:
             failed_msg_error = match.group(1).strip()
             failed_msg_code_line = match.group(2).strip()
@@ -145,8 +153,7 @@ def pytest_runtest_makereport(item, call):
                 log.write(f"程式詳情: {failed_msg_code_line}\n")
                 log.write("=========================================\n")  # 添加分隔符或標記
         else:
-            with open(log_file, 'a', encoding = 'utf-8') as log:
-                log.write("未找到匹配'pytest.fail.Exception'的錯誤資訊，或是其他預期外錯誤")
-
+            with open(log_file, 'a', encoding='utf-8') as log:
+                log.write("未找到匹配的錯誤資訊，或是其他預期外錯誤")
     else:
         pass
