@@ -38,5 +38,27 @@
 ## 📁 專案目錄結構
 
 ```
+auto_test/                                 # 專案根目錄
+├── __pycache__/                           # Python執行時產生的快取
+├── .idea/                                 # PyCharm專案設定資料夾
+├── .pytest_cache/                         # pytest執行後的快取資料
+├── error_log/                             # 自訂錯誤日誌輸出目錄
+├── htmlcov/                               # coverage執行產生的HTML報告
+├── pages/                                 # Page Object 模組
+│   ├── __pycache__/                       # pages快取
+│   ├── __init__.py                        # 讓 pages 成為Python套件
+│   └── register.py                        # 註冊頁的Page Object
+├── tests/                                 # 測試腳本和設定
+│   ├── __pycache__/                       # tests快取
+│   ├── configs.py                         # 環境設定、測試資料
+│   ├── conftest.py                        # pytest fixture配置
+│   └── test_register_reg.py               # 註冊頁測試案例
+├── utils/                                 # 共用工具
+│   ├── __pycache__/                       # utils快取
+│   └── logger.py                          # 自訂logger封裝
+├── venv/                                  # Python虛擬環境
+├── .coverage                              # coverage執行結果檔
+├── .gitignore                             # git忽略規則
+├── pytest.ini                             # pytest全域設定
 
 ```
