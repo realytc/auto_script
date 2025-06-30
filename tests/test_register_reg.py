@@ -51,12 +51,17 @@ def test_country_selection_updates_mobile_code(chrome_browser, register_page_ins
     register = register_page_instance
     data = register_data
     expected_country_code = data['valid_data']['country_code']
+    register.enter_country(data['valid_data']['country_of_residence'])
     actual_country_code = register.check_country_code()
         
     assert expected_country_code == actual_country_code, (
     f"Country code is not correct. "
     f"Expected: {expected_country_code}, Actual: {actual_country_code}"
 )
+    
+    
+    
+
 
 
 

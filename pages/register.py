@@ -1,6 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -37,11 +39,14 @@ class RegisterPage:
         """
         輸入國家
         """
-        country_input= self.driver.wait.until(
+        country_field = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//input[@aria-label='country Select Input']"))
         )
-        logger.info(f"Found element：{country_input}, continue to input country")
-        self.driver.find_element(*self.country_input).send_keys(country)
+        logger.info(f"Found element{country_field}, continue to input country")
+        country_input = self.driver.find_element(*self.country_input)
+        country_input.send_keys(country)
+        country_input.send_keys(Keys.ENTER)
+        logger.info(f"Input country: {country}")
 
     def check_country_code(self):
         """
@@ -50,6 +55,7 @@ class RegisterPage:
         WebDriverWait(self.driver, 10).until(
         EC.presence_of_element_located(self.country_code)
     )
+        logger.info(f"Found element：{self.country_code}, continue to get country code")
         actual_country_code = self.driver.find_element(*self.country_code).get_attribute("value")
         logger.info(f"Found actual country code:：{actual_country_code}")
         return actual_country_code
