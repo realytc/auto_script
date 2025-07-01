@@ -1,4 +1,5 @@
 import pytest
+import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -9,6 +10,13 @@ import re
 import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from pages import register
+from utils.logger import get_logger
+
+
+logger = get_logger(__name__)
+RegisterPage = register.RegisterPage
 
 import stat
 
@@ -102,17 +110,28 @@ def page_config(env, request):
     return env_config[env][page]
 
 @pytest.fixture(scope="session")
-def register_page(env):
+def register_page＿data(env):
     """
     專門取得 register 頁面的 URL 或其他資訊
     """
     return env_config[env]["register"]
 @pytest.fixture(scope="session")
-def register_data(register_page):
+def register_test_data(register_page_data):
     """
     專門取得 register頁面的測試資料
     """
-    return register_page["test_data"]
+    return register_page_data["test_data"]
+
+
+@pytest.fixture(scope="session")
+def register_page(chrome_browser, env):
+    """
+    開啟 Register 頁面並返回 RegisterPage 實例
+    """
+    url = env_config[env]["register"]["url"]
+    chrome_browser.get(url)
+    logger.info(f"Opened register page: {url}")
+    return RegisterPage(chrome_browser)
 
 # tryfirst=True = 多個hook時，先跑這個 hook
 # hookwrapper=True = 可以在執行前後插入代碼，攔截結果、修改結果，收集測試資訊
