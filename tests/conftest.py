@@ -123,7 +123,7 @@ def register_test_data(register_page_data):
     return register_page_data["test_data"]
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def register_page(chrome_browser, env):
     """
     開啟 Register 頁面並返回 RegisterPage 實例

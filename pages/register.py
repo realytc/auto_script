@@ -36,9 +36,16 @@ class RegisterPage:
             By.XPATH,
             "//input[@aria-label='register password input']"
         )
-        self.email_input = (By.NAME, "policy")
+        self.email_input = (By.NAME, "email")
         self.privacy_policy_checkbox = (By.NAME, "policy")
         self.continue_button = (By.XPATH, "//button[@aria-label='continue button']")
+    
+    def refresh_page(self):
+        """
+        刷新當前頁面
+        """
+        self.driver.refresh()
+        logger.info("Page refreshed.")
     
     def enter_country(self, country: str):
         """
@@ -95,6 +102,22 @@ class RegisterPage:
         except Exception as e:
             logger.error(f"Error entering first name {first_name}: {e}")
             raise
+    def enter_last_name(self, last_name:str):
+        """
+        輸入last_name
+        """
+        try:
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(self.last_name_input)
+            )
+            last_name_input = self.driver.find_element(*self.last_name_input)
+            last_name_input.clear()
+            last_name_input.send_keys(last_name)
+            logger.info(f"Input last name: {last_name}")
+        except Exception as e:
+            logger.error(f"Error entering last name {last_name}: {e}")
+            raise
+
 
     def enter_mobile_number(self, mobile_number: str):
         """
@@ -156,11 +179,24 @@ class RegisterPage:
             )
             continue_button = self.driver.find_element(*self.continue_button)
             continue_button.click()
-            logger.info("Clicked continue button")
+            logger.info("Clicked continue button...")
         except Exception as error:
             logger.error(f"Error clicking continue button: {error}")
             raise
-        
+            
+    def wait_for_url_change(self, old_url):
+        """
+        等待 URL 變化
+        """
+        try:
+            WebDriverWait(self.driver, timeout=10).until(
+                EC.url_changes(old_url)
+            )
+            logger.info("URL changed successfully.")
+        except TimeoutException:
+            logger.error("Timeout waiting for URL to change.")
+            raise
+    
     def check_invalid_first_name_error(self):
         """
         檢查first name錯誤訊息
@@ -175,8 +211,11 @@ class RegisterPage:
             )
             error_text = error_element.text
             logger.info(f"Found first name error: {error_text}")
+            return error_text  
+
         except TimeoutException:
             logger.info("No first name error message found")
+            return None
         except Exception as error:
             logger.error(f"Error checking first name error: {error}")
             
@@ -194,8 +233,10 @@ class RegisterPage:
             )
             error_text = error_element.text
             logger.info(f"Found first name error: {error_text}")
+            return error_text
         except TimeoutException:
             logger.info("No first name error message found")
+            return None
         except Exception as error:
             logger.error(f"Error checking first name error: {error}")
     
@@ -213,13 +254,15 @@ class RegisterPage:
             )
             error_text = error_element.text
             logger.info(f"Found last name error: {error_text}")
+            return error_text
         except TimeoutException:
             logger.info("No last name error message found")
+            return None
         except Exception as error:
             logger.error(f"Error checking last name error: {error}")
             
 
-def check_char_limit_last_name_error(self):
+    def check_char_limit_last_name_error(self):
         """
         檢查last name字數超過40字錯誤訊息
         """
@@ -233,8 +276,10 @@ def check_char_limit_last_name_error(self):
             )
             error_text = error_element.text
             logger.info(f"Found first name error: {error_text}")
+            return error_text
         except TimeoutException:
             logger.info("No first name error message found")
+            return None
         except Exception as error:
             logger.error(f"Error checking first name error: {error}")
     

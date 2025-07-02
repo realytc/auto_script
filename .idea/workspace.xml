@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca4dabc3-523d-47a0-97ad-0e41d88ae7af" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pages/＿init__.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../ts_g20_web_backstage_agent_v1/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../ts_g20_web_backstage_agent_v1/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/auto_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/auto_test.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/register.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/register.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/configs.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/configs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_register_reg.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_register_reg.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ts_g20_web_backstage_agent_v1/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ts_g20_web_backstage_agent_v1/tests/conftest.py" afterDir="false" />
     </list>
