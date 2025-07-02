@@ -2,4 +2,4 @@
 error_log/
 htmlcov/
 .coverage
-
+log/

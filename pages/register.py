@@ -282,6 +282,27 @@ class RegisterPage:
             return None
         except Exception as error:
             logger.error(f"Error checking first name error: {error}")
-    
+
+    def check_invalid_email_address_error(self):
+        """
+        檢查email address錯誤訊息
+        """
+        try:
+            # 等待錯誤訊息出現
+            error_element = WebDriverWait(self.driver, 10).until(
+                EC.visibility_of_element_located((
+                    By.XPATH,
+                    "//div[@aria-label='Invalid Email' and contains(., register_error_msg.INVALID_EMAIL_ADDRESS)]"
+                ))
+            )
+            error_text = error_element.text
+            logger.info(f"Found first name error: {error_text}")
+            return error_text
+        except TimeoutException:
+            logger.info("No first name error message found")
+            return None
+        except Exception as error:
+            logger.error(f"Error checking first name error: {error}")
+
 
 

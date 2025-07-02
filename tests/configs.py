@@ -54,6 +54,15 @@ env_config = {
                     "mobile_number": "+886 911222333",
                     "email_address": "test1234@gmail.com",
                     "create_password": "Lucky1234@"
+                },
+                "invalid_email_address": {
+                    "country_of_residence": "Taiwan",
+                    "country_code": "+886",
+                    "first_name": "test",
+                    "last_name": "testme",
+                    "mobile_number": "+886 911222333",
+                    "email_address": "1111", #信箱格式不符
+                    "create_password": "Lucky1234@"
                 }
             }
         }

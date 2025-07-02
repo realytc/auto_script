@@ -1,17 +1,13 @@
-import pages.register
-from configs import env_config
+
 import sys
 import os
-
-#確保找到檔案
-
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+import utils.error_msg as error_msg
+
 
 import pytest
 import requests
-import time
 from utils.logger import get_logger
-from utils.error_msg import RegisterErrorＭsg
 
 
 
@@ -19,11 +15,11 @@ logger = get_logger(__name__)   # __name__ 會顯示當前模組名稱
 
 
 
-def test_open_register_page(register_page, page_config):
+def test_open_register_page(register_page, register_page＿data):
     """
     嘗試使用共用性fixture(page_config)，多個頁面需要測試開啟時，新增參數即可。
     """
-    url = page_config["url"]
+    url = register_page＿data["url"]
     response = requests.get(url)
     # 檢查頁面是否開啟
     assert response.status_code == 200
@@ -49,17 +45,18 @@ def test_country_selection_updates_mobile_code(register_page, register_test_data
 @pytest.mark.parametrize(
     "data_key, error_check_method, expected_error_enum",
     [
-        ("invalid_first_name", "check_invalid_first_name_error", RegisterErrorMsg.INVALID_FIRST_NAME),
-        ("first_name_over_40_chars", "check_char_limit_first_name_error", RegisterErrorMsg.MAX_CHAR_LIMIT),
-        ("invalid_last_name", "check_invalid_last_name_error", RegisterErrorMsg.INVALID_LAST_NAME),
-        ("last_name_over_40_chars", "check_char_limit_last_name_error", RegisterErrorMsg.MAX_CHAR_LIMIT),
-        ("invalid_email_address", "check_invalid_email_address_error", RegisterErrorMsg.INVALID_EMAIL_ADDRESS),
+        ("invalid_first_name", "check_invalid_first_name_error", error_msg.RegisterErrorMsg.INVALID_FIRST_NAME),
+        ("first_name_over_40_chars", "check_char_limit_first_name_error", error_msg.RegisterErrorMsg.MAX_CHAR_LIMIT),
+        ("invalid_last_name", "check_invalid_last_name_error", error_msg.RegisterErrorMsg.INVALID_LAST_NAME),
+        ("last_name_over_40_chars", "check_char_limit_last_name_error", error_msg.RegisterErrorMsg.MAX_CHAR_LIMIT),
+        ("invalid_email_address", "check_invalid_email_address_error", error_msg.RegisterErrorMsg.INVALID_EMAIL_ADDRESS),
     ],
     ids=[
         "Invalid First Name",
         "First Name >40 chars",
         "Invalid Last Name",
         "Last Name >40 chars",
+        "Invalid Email Address"
     ]
 )
 def test_register_invalid_data(register_page, register_test_data, data_key, error_check_method, expected_error_enum):
@@ -73,7 +70,7 @@ def test_register_invalid_data(register_page, register_test_data, data_key, erro
     record = data[data_key]
 
     # 輸入欄位
-    # register_page.refresh_page()
+    register_page.refresh_page()
     register_page.enter_country(record["country_of_residence"])
     register_page.check_country_code()
     register_page.enter_first_name(record["first_name"])

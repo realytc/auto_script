@@ -28,10 +28,18 @@
 
 ## 📖 檢閱報錯日誌
 
-1. 每次執行測試後，會自動抓取 pytest 報錯的內容。
-2. 自動建立 `error_log` 目錄(若存在，則不建立)，並在其目錄下建立 `error_執行時間.log`檔案。
-3. 可利用記事本開啟 _.log_ 檔，檢視錯誤日誌。
-4. 功能設定於 _conftest.py_。
+1. 每次執行測試後，會 **自動儲存 pytest 報錯內容**。
+   - 自動建立 `error_log` 目錄（若已存在，則不重複建立）。
+   - 在該目錄下建立 `error_執行時間.log` 檔案。
+   - 可使用記事本或任何文字編輯器開啟 `.log` 檔，檢視錯誤日誌。
+   - 功能設定於 `conftest.py`。
+
+2. 每次執行測試後，會 **自動儲存執行 log 內容**。
+   - 自動建立 `log` 目錄（若已存在，則不重複建立）。
+   - 每次執行會產生帶有當日時間戳的獨立 log 檔。
+   - 當日執行多次，log都會新增在同一檔案中。
+   - 可使用記事本開啟 `.log` 檔，檢視詳細執行過程。
+
 
 `<參考>`: https://docs.pytest.org/en/stable/reference/reference.html#pytest.hookspec.pytest_runtest_makereport
 

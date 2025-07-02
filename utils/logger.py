@@ -13,8 +13,8 @@ def get_logger(name="logger"):
             os.makedirs(log_dir)
 
         # 檔名
-        now = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_filename = f"{name}_{now}.log"
+        today = datetime.now().strftime("%Y%m%d")
+        log_filename = f"{name}_{today}.log"
         log_path = os.path.join(log_dir, log_filename)
         # Console Handler
         console_handler = logging.StreamHandler()
@@ -26,7 +26,7 @@ def get_logger(name="logger"):
 
         # 設定日誌輸出格式
         formatter = logging.Formatter(
-            '[%(asctime)s][%(name)s][%(levelname)s]_%(message)s',
+            '[%(asctime)s][%(name)s][%(levelname)s] %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S'
         )
         console_handler.setFormatter(formatter)

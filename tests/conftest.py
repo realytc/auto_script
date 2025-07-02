@@ -57,6 +57,7 @@ def chrome_browser(device):
 
     # 常用穩定性參數
     options.add_argument('--no-sandbox')
+    options.add_argument("--incognito")
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-dev-shm-usage') 
