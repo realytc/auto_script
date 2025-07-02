@@ -53,6 +53,7 @@ def test_country_selection_updates_mobile_code(register_page, register_test_data
         ("first_name_over_40_chars", "check_char_limit_first_name_error", RegisterErrorMsg.MAX_CHAR_LIMIT),
         ("invalid_last_name", "check_invalid_last_name_error", RegisterErrorMsg.INVALID_LAST_NAME),
         ("last_name_over_40_chars", "check_char_limit_last_name_error", RegisterErrorMsg.MAX_CHAR_LIMIT),
+        ("invalid_email_address", "check_invalid_email_address_error", RegisterErrorMsg.INVALID_EMAIL_ADDRESS),
     ],
     ids=[
         "Invalid First Name",
