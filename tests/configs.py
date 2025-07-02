@@ -63,6 +63,9 @@ env_config = {
                     "mobile_number": "+886 911222333",
                     "email_address": "1111", #信箱格式不符
                     "create_password": "Lucky1234@"
+                },
+                "privacy_policy_redirect": {
+                    "url": "https://acyasia-cn.com/en/support/privacy-policy" #使用者IP在台灣
                 }
             }
         }

@@ -1,10 +1,11 @@
 
 import sys
 import os
+import time
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import utils.error_msg as error_msg
-
-
+from pages.register import RegisterPage
 import pytest
 import requests
 from utils.logger import get_logger
@@ -67,6 +68,7 @@ def test_register_invalid_data(register_page, register_test_data, data_key, erro
     old_url = register_page.driver.current_url
     logger.info(f"Old URL: {old_url}")
 
+    # 將多筆的測試資料，抽出單筆資料
     record = data[data_key]
 
     # 輸入欄位
@@ -96,6 +98,24 @@ def test_register_invalid_data(register_page, register_test_data, data_key, erro
         f"Expected error message: {expected_error_msg}, "
         f"Actual error message: {actual_error_msg}"
     )
+
+def test_privacy_policy_redirect(register_page, register_test_data):
+    old_url = register_page.driver.current_url
+    original_window = register_page.driver.current_window_handle
+    logger.info(f"original window: {original_window}")
+    register_page.click_privacy_policy_redirect()
+    new_window = register_page.driver.current_window_handle
+    logger.info(f"new window: {new_window}")
+    register_page.wait_for_new_tab_opened(original_window, old_url)
+    register_page.switch_to_new_tab(original_window)
+    new_window_url = register_page.driver.current_url
+    expected_url = register_test_data["privacy_policy_redirect"]["url"]
+    time.sleep(10)
+    assert new_window_url == expected_url, (
+        f"New window url: {new_window_url}, "
+        f"Expected url: {expected_url} ,"
+    )
+
 
 
 
