@@ -65,7 +65,7 @@ env_config = {
                     "create_password": "Lucky1234@"
                 },
                 "privacy_policy_redirect": {
-                    "url": "https://acyasia-cn.com/en/support/privacy-policy" #使用者IP在台灣
+                    "url": "https://acyasia-cn.com/en/support/privacy-policy/" #使用者IP在台灣
                 }
             }
         }
