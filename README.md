@@ -1,18 +1,19 @@
 ## 📍 Repo 目的
 
-試作 ACY 網站的註冊驗面自動化測試。
+試作 ACY 網站的註冊驗面自動化測試，涵蓋模擬裝置、錯誤驗證與分頁跳轉。
 
 ## 📜 Command Line 說明
 
-1. 對終端機下指令 `pytest 目錄/檔案` 會自動加上`-sv` 參數，告訴 pytest 回報詳細的測試結果並列出打印的關鍵資料。
+1. `pytest --collect-only -v` 會列出此份腳本的測項。
+2. 對終端機下指令 `pytest 目錄/檔案` 會自動加上`-sv` 參數，告訴 pytest 回報詳細的測試結果並列出打印的關鍵資料。
    - 若要移除預設參數，可至 _pytest.ini_ 初始檔，移除設定`addopts= -sv`。
    - `-s` 表示終端機會顯示 `print()` 資料。
    - `-v` 表示終端機會顯示測試詳情與錯誤內容。
-2. 環境參數 `--env=uat` 與 `--env=prod`，可切換執行環境。
+3. 環境參數 `--env=uat` 與 `--env=prod`，可切換執行環境。
    - 預設執行環境為 `UAT`。
    - 指令範例: `pytest --env=prod tests/test_register_reg` 表示在 `PROD`環境執行腳本。
    - 相關代碼在 _configs.py_ 和 _conftest.py_。
-3. 裝置參數，可切換執行裝置。
+4. 裝置參數，可切換執行裝置。
    - 預設執行裝置為 `desktop`。
    - 指令範例: `pytest --device=mobile`。
    - 參數選項： desktop / mobile / tablet
