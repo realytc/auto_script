@@ -39,7 +39,7 @@
    - 自動建立 `log` 目錄（若已存在，則不重複建立）。
    - 每次執行會產生帶有當日時間戳的獨立 log 檔。
    - 當日執行多次，log都會新增在同一檔案中。
-   - 可使用記事本開啟 `.log` 檔，檢視詳細執行過程。
+   - 可使用記事本或任何文字編輯器開啟 `.log` 檔，檢視詳細執行過程。
 
 
 `<參考>`: https://docs.pytest.org/en/stable/reference/reference.html#pytest.hookspec.pytest_runtest_makereport
