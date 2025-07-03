@@ -102,16 +102,16 @@ def test_register_invalid_data(register_page, register_test_data, data_key, erro
 def test_privacy_policy_redirect(register_page, register_test_data):
     old_url = register_page.driver.current_url
     original_window = register_page.driver.current_window_handle
-    logger.info(f"original window: {original_window}")
+    logger.info(f"Original window: {original_window}")
     register_page.click_privacy_policy_redirect()
     new_window = register_page.driver.current_window_handle
-    logger.info(f"new window: {new_window}")
+    logger.info(f"New window: {new_window}")
     register_page.wait_for_new_tab_opened(original_window, old_url)
     register_page.switch_to_new_tab(original_window)
     new_window_url = register_page.driver.current_url
-    logger.info(f"new window url: {new_window_url}")
+    logger.info(f"New window url: {new_window_url}")
     expected_url = register_test_data["privacy_policy_redirect"]["url"]
-    logger.info(f"expected url: {expected_url}")
+    logger.info(f"Expected url: {expected_url}")
     assert new_window_url == expected_url, (
         f"New window url: {new_window_url}, "
         f"Expected url: {expected_url} ,"
