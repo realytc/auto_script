@@ -1,32 +1,30 @@
 import pytest
-import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from configs import env_config
 import datetime
-import re
 import os
 import sys
+import stat
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from pages import register
 from utils.logger import get_logger
 
-
 logger = get_logger(__name__)
 RegisterPage = register.RegisterPage
 
-import stat
 
 # 自動加執行權限
 def pytest_addoption(parser):
     """添加 pytest 命令列選項"""
     parser.addoption(
-        "--env", 
-        action="store", 
-        default="prod", 
+        "--env",
+        action="store",
+        default="prod",
         help="Environment to use: uat or prod (default: prod)."
     )
     parser.addoption(
@@ -36,11 +34,31 @@ def pytest_addoption(parser):
         help="Device mode to use: desktop, tablet, or mobile (default: desktop)."
     )
 
+
 @pytest.fixture(scope="session")
 def device(request):
     """回傳目前裝置模式"""
     return request.config.getoption("--device")
 
+def configure_device_options(device: str, options: webdriver.ChromeOptions):
+    """
+    根據 device 參數設定 ChromeOptions
+    """
+    device = device.lower()
+
+    if device == "desktop":
+        # 桌面直接設 window size
+        options.add_argument("--window-size=1920,1200")
+    elif device == "tablet":
+        # Tablet 用內建 iPad 模擬
+        mobile_emulation = {"deviceName": "iPad"}
+        options.add_experimental_option("mobileEmulation", mobile_emulation)
+    elif device == "mobile":
+        # Mobile 用內建 iPhone X 模擬
+        mobile_emulation = {"deviceName": "iPhone X"}
+        options.add_experimental_option("mobileEmulation", mobile_emulation)
+    else:
+        raise ValueError(f"Unknown device: {device}")
 
 @pytest.fixture(scope="session")
 def chrome_browser(device):
@@ -60,42 +78,30 @@ def chrome_browser(device):
     options.add_argument("--incognito")
     options.add_argument('--disable-extensions')
     options.add_argument('--disable-gpu')
-    options.add_argument('--disable-dev-shm-usage') 
+    options.add_argument('--disable-dev-shm-usage')
 
-    # 根據device設置
-    if device == "desktop":
-        options.add_argument('--window-size=1920,1200')
-    elif device == "tablet":
-        options.add_argument('--window-size=800,1280')
-        options.add_argument(
-            '--user-agent=Mozilla/5.0 (iPad; CPU OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Mobile/15E148 Safari/604.1'
-        )
-    elif device == "mobile":
-        options.add_argument('--window-size=375,812')
-        options.add_argument(
-            '--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 13_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Mobile/15E148 Safari/604.1'
-        )
-    else:
-        raise ValueError(f"Unknown device: {device}")
+    # 根據 device 設定
+    configure_device_options(device, options)
 
-    # 建立 ChromeDriver 服務 (自動下載相容版本)
-    # chrome_service = Service(executable_path=ChromeDriverManager().install())
-    # 自動下載chromedriver
+    # 自動下載 chromedriver
     driver_path = ChromeDriverManager().install()
 
     # 強制修正路徑
     if not os.path.basename(driver_path) == "chromedriver":
         driver_path = os.path.join(os.path.dirname(driver_path), "chromedriver")
     print("使用的chromedriver路徑：", driver_path)
+
     # mac 自動加執行權限
     st = os.stat(driver_path)
     os.chmod(driver_path, st.st_mode | stat.S_IEXEC)
+
     chrome_service = Service(driver_path)
     driver = webdriver.Chrome(service=chrome_service, options=options)
+
     yield driver
+
     driver.delete_all_cookies()
     driver.quit()
-    
 
 @pytest.fixture(scope="session")
 def env(request):
@@ -139,41 +145,37 @@ def register_page(chrome_browser, env):
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    本功能是利用pytest報告的hook function取出pytest報錯的log，
-    並在error_log目錄下，建立.log檔。
+    利用 pytest hook function 捕獲報錯並寫入 log 檔
     """
-    # 暫停函數並返回一個結果容器，包含測試報告
     outcome = yield
-    # 取得報告測試物件
     report = outcome.get_result()
 
-    # 改為捕捉所有失敗（assert、Exception等）
     if report.when == 'call' and report.failed:
         now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         os.makedirs('error_log', exist_ok=True)
         log_file = os.path.join('error_log', f"error_{now}.log")
-        failed_txt = str(report.longrepr)
-        
-        """
-        捕捉匹配到的兩個組合Failed結果的文字: 
-        組合1： "Failed:" 與 "tests\" (末行的代碼行數)之間的所有字符。
-        組合2： "tests\" 之後和 ": Failed" 之前的所有非空白字符。
-        """
-        path_sep = re.escape(os.sep) #設定 Windows(\) & Ubuntu(/) 的斜線通用辨識符號
-        match = re.search(rf'Failed:(.*?)tests{path_sep}(\S+): Failed', failed_txt, re.DOTALL)
 
-        if match:
-            failed_msg_error = match.group(1).strip()
-            failed_msg_code_line = match.group(2).strip()
-            # 開檔模式為追加模式，避免覆蓋，編碼為utf-8
-            with open(log_file, 'a', encoding='utf-8') as log:
-                log.write(f"測試案例: {report.nodeid}\n")
-                log.write(f"測試時間: {now}\n")
-                log.write(f"報錯內容: {failed_msg_error}\n")
-                log.write(f"程式詳情: {failed_msg_code_line}\n")
-                log.write("=========================================\n")  # 添加分隔符或標記
+        # 預設值
+        error_message = ""
+        error_path = ""
+        error_lineno = ""
+
+        # 根據型態分別處理
+        if hasattr(report.longrepr, "reprcrash"):
+            error_message = report.longrepr.reprcrash.message
+            error_path = report.longrepr.reprcrash.path
+            error_lineno = report.longrepr.reprcrash.lineno
         else:
-            with open(log_file, 'a', encoding='utf-8') as log:
-                log.write("未找到匹配的錯誤資訊，或是其他預期外錯誤")
-    else:
-        pass
+            # 直接轉成字串
+            error_message = str(report.longrepr)
+
+        with open(log_file, 'a', encoding='utf-8') as log:
+            log.write(f"測試案例: {report.nodeid}\n")
+            log.write(f"測試時間: {now}\n")
+            log.write(f"錯誤訊息: {error_message}\n")
+            if error_path:
+                log.write(f"檔案路徑: {error_path}\n")
+            if error_lineno:
+                log.write(f"行號: {error_lineno}\n")
+            log.write("=========================================\n")
+

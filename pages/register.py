@@ -337,7 +337,8 @@ class RegisterPage:
                     WebDriverWait(self.driver, timeout=10).until(
                         lambda d: d.current_url != "about:blank"
                     )
-                    logger.info("Switched to new tab")
+                    new_window_url = self.driver.current_url
+                    logger.info(f"Switched to new tab: {new_window_url}")
                     return handle
 
         except Exception as error:
