@@ -18,7 +18,7 @@ logger = get_logger(__name__)   # __name__ 會顯示當前模組名稱
 
 def test_open_register_page(register_page, register_page＿data):
     """
-    嘗試使用共用性fixture(page_config)，多個頁面需要測試開啟時，新增參數即可。
+    測試開啟頁面是否正常
     """
     url = register_page＿data["url"]
     response = requests.get(url)
@@ -100,6 +100,9 @@ def test_register_invalid_data(register_page, register_test_data, data_key, erro
     )
 
 def test_privacy_policy_redirect(register_page, register_test_data):
+    """
+    測試點擊privacy policy文字連結是否會跳轉頁面
+    """
     old_url = register_page.driver.current_url
     original_window = register_page.driver.current_window_handle
     logger.info(f"Original window: {original_window}")
