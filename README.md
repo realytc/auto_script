@@ -10,7 +10,7 @@
    - `-s` 表示終端機會顯示 `print()` 資料。
    - `-v` 表示終端機會顯示測試詳情與錯誤內容。
 3. 環境參數 `--env=uat` 與 `--env=prod`，可切換執行環境。
-   - 預設執行環境為 `UAT`。
+   - 預設執行環境為 `prod`。
    - 指令範例: `pytest --env=prod tests/test_register_reg` 表示在 `PROD`環境執行腳本。
    - 相關代碼在 _configs.py_ 和 _conftest.py_。
 4. 裝置參數，可切換執行裝置。
