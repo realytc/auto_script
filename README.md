@@ -43,10 +43,6 @@ This repository aims to automate ACY website registration interface testing, cov
 
 `<Reference>`: [pytest.hookspec.pytest_runtest_makereport](https://docs.pytest.org/en/stable/reference/reference.html#pytest.hookspec.pytest_runtest_makereport)
 
-## 📁 Project Directory Structure
-
-
-`<參考>`: https://docs.pytest.org/en/stable/reference/reference.html#pytest.hookspec.pytest_runtest_makereport
 
 ## 📁 Project Directory Structure
 
